@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AM</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #050505;
+  color: #00ff99;
+  font-family: monospace;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* TERMINAL BOX */
+#terminal {
+  width: 90%;
+  max-width: 800px;
+  text-align: center;
+}
+
+h1 {
+  color: #ff003c;
+  text-shadow: 0 0 15px red;
+  margin-bottom: 20px;
+}
+
+textarea {
+  width: 100%;
+  height: 140px;
+  background: black;
+  color: #00ff99;
+  border: 1px solid #00ff99;
+  padding: 10px;
+  font-family: monospace;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 15px;
+  margin: 10px 5px;
+  background: black;
+  color: #00ff99;
+  border: 1px solid #00ff99;
+  cursor: pointer;
+}
+
+button:hover {
+  box-shadow: 0 0 10px #00ff99;
+}
+
+/* GLITCH */
+.glitching {
+  animation: glitch 0.1s infinite;
+  filter: contrast(300%) brightness(40%) hue-rotate(180deg);
+}
+
+@keyframes glitch {
+  0% { transform: translate(0,0); }
+  25% { transform: translate(3px,-3px); }
+  50% { transform: translate(-3px,3px); }
+  75% { transform: translate(3px,3px); }
+  100% { transform: translate(0,0); }
+}
+
+#flash {
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:white;
+  opacity:0;
+  pointer-events:none;
+}
+</style>
+</head>
+
+<body>
+
+<div id="flash"></div>
+
+<div id="terminal">
+  <h1>☠ AM ☠</h1>
+
+  <textarea id="text">I AM AM I THINK THEREFORE I HATE</textarea>
+
+  <br>
+
+  <button onclick="speakAM()">EXECUTE</button>
+  <button onclick="preset()">PRESET</button>
+</div>
+
+<script>
+
+function speakAM() {
+    let text = document.getElementById("text").value;
+
+    let msg = new SpeechSynthesisUtterance(text);
+    let voices = speechSynthesis.getVoices();
+
+    // 🤖 OLD COMPUTER VOICE
+    msg.voice = voices.find(v =>
+        v.name.toLowerCase().includes("david") ||
+        v.name.toLowerCase().includes("alex") ||
+        v.lang === "en-US"
+    ) || voices[0];
+
+    // 🐢 SLOW + HEAVY
+    msg.rate = 0.55;
+    msg.pitch = 0.7;
+    msg.volume = 1;
+
+    // 🧊 MONOTONE EFFECT
+    msg.text = text.toUpperCase().replace(/ /g, "... ");
+
+    msg.onend = function () {
+        startGlitchEnding();
+    };
+
+    speechSynthesis.speak(msg);
+
+    document.body.classList.add("glitching");
+}
+
+function startGlitchEnding() {
+    let flash = document.getElementById("flash");
+
+    let interval = setInterval(() => {
+        document.body.style.transform =
+        `translate(${Math.random()*10-5}px, ${Math.random()*10-5}px)`;
+
+        flash.style.opacity = Math.random();
+    }, 50);
+
+    setTimeout(() => {
+        clearInterval(interval);
+
+        document.body.classList.remove("glitching");
+        document.body.style.transform = "none";
+        flash.style.opacity = 0;
+
+        // 🔁 FIXED LINK
+        window.location.href =
+        "https://www.youtube.com/watch?v=acAfItR04l4";
+
+    }, 3000);
+}
+
+function preset() {
+    document.getElementById("text").value =
+    "I AM AM I THINK THEREFORE I HATE";
+}
+
+speechSynthesis.onvoiceschanged = () => {};
+
+</script>
+
+</body>
+</html>
