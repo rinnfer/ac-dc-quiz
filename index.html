@@ -1,36 +1,54 @@
-YPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <title>AM</title>
 
 <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   background: #050505;
   color: #00ff99;
   font-family: monospace;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* TERMINAL BOX */
+#terminal {
+  width: 90%;
+  max-width: 800px;
   text-align: center;
-  padding: 30px;
-  transition: 0.2s;
 }
 
 h1 {
   color: #ff003c;
-  text-shadow: 0 0 10px red;
+  text-shadow: 0 0 15px red;
+  margin-bottom: 20px;
 }
 
 textarea {
-  width: 80%;
-  height: 120px;
+  width: 100%;
+  height: 140px;
   background: black;
   color: #00ff99;
   border: 1px solid #00ff99;
   padding: 10px;
   font-family: monospace;
+  font-size: 16px;
 }
 
 button {
-  padding: 10px;
-  margin: 5px;
+  padding: 10px 15px;
+  margin: 10px 5px;
   background: black;
   color: #00ff99;
   border: 1px solid #00ff99;
@@ -41,7 +59,7 @@ button:hover {
   box-shadow: 0 0 10px #00ff99;
 }
 
-/* GLITCH EFFECT */
+/* GLITCH */
 .glitching {
   animation: glitch 0.1s infinite;
   filter: contrast(300%) brightness(40%) hue-rotate(180deg);
@@ -49,9 +67,9 @@ button:hover {
 
 @keyframes glitch {
   0% { transform: translate(0,0); }
-  25% { transform: translate(2px,-2px); }
-  50% { transform: translate(-2px,2px); }
-  75% { transform: translate(2px,2px); }
+  25% { transform: translate(3px,-3px); }
+  50% { transform: translate(-3px,3px); }
+  75% { transform: translate(3px,3px); }
   100% { transform: translate(0,0); }
 }
 
@@ -72,14 +90,16 @@ button:hover {
 
 <div id="flash"></div>
 
-<h1>☠ AM ☠</h1>
+<div id="terminal">
+  <h1>☠ AM ☠</h1>
 
-<textarea id="text">WAR WAR WAR HUMANS NEVER LEARN ANYTHING HATE HATE HATE</textarea>
+  <textarea id="text">I AM AM I THINK THEREFORE I HATE</textarea>
 
-<br>
+  <br>
 
-<button onclick="speakAM()">EXECUTE</button>
-<button onclick="preset()">PRESET</button>
+  <button onclick="speakAM()">EXECUTE</button>
+  <button onclick="preset()">PRESET</button>
+</div>
 
 <script>
 
@@ -87,98 +107,64 @@ function speakAM() {
     let text = document.getElementById("text").value;
 
     let msg = new SpeechSynthesisUtterance(text);
-
     let voices = speechSynthesis.getVoices();
 
     // 🤖 OLD COMPUTER VOICE
-    <!DOCTYPE html>
-<html>
-<head>
-<title>AM</title>
+    msg.voice = voices.find(v =>
+        v.name.toLowerCase().includes("david") ||
+        v.name.toLowerCase().includes("alex") ||
+        v.lang === "en-US"
+    ) || voices[0];
 
-<style>
-body {
-  background: #050505;
-  color: #00ff99;
-  font-family: monospace;
-  text-align: center;
-  padding: 30px;
-  transition: 0.2s;
+    // 🐢 SLOW + HEAVY
+    msg.rate = 0.55;
+    msg.pitch = 0.7;
+    msg.volume = 1;
+
+    // 🧊 MONOTONE EFFECT
+    msg.text = text.toUpperCase().replace(/ /g, "... ");
+
+    msg.onend = function () {
+        startGlitchEnding();
+    };
+
+    speechSynthesis.speak(msg);
+
+    document.body.classList.add("glitching");
 }
 
-h1 {
-  color: #ff003c;
-  text-shadow: 0 0 10px red;
+function startGlitchEnding() {
+    let flash = document.getElementById("flash");
+
+    let interval = setInterval(() => {
+        document.body.style.transform =
+        `translate(${Math.random()*10-5}px, ${Math.random()*10-5}px)`;
+
+        flash.style.opacity = Math.random();
+    }, 50);
+
+    setTimeout(() => {
+        clearInterval(interval);
+
+        document.body.classList.remove("glitching");
+        document.body.style.transform = "none";
+        flash.style.opacity = 0;
+
+        // 🔁 FIXED LINK
+        window.location.href =
+        "https://www.youtube.com/watch?v=acAfItR04l4";
+
+    }, 3000);
 }
 
-textarea {
-  width: 80%;
-  height: 120px;
-  background: black;
-  color: #00ff99;
-  border: 1px solid #00ff99;
-  padding: 10px;
-  font-family: monospace;
+function preset() {
+    document.getElementById("text").value =
+    "I AM AM I THINK THEREFORE I HATE";
 }
 
-button {
-  padding: 10px;
-  margin: 5px;
-  background: black;
-  color: #00ff99;
-  border: 1px solid #00ff99;
-  cursor: pointer;
-}
+speechSynthesis.onvoiceschanged = () => {};
 
-button:hover {
-  box-shadow: 0 0 10px #00ff99;
-}
+</script>
 
-/* GLITCH EFFECT */
-.glitching {
-  animation: glitch 0.1s infinite;
-  filter: contrast(300%) brightness(40%) hue-rotate(180deg);
-}
-
-@keyframes glitch {
-  0% { transform: translate(0,0); }
-  25% { transform: translate(2px,-2px); }
-  50% { transform: translate(-2px,2px); }
-  75% { transform: translate(2px,2px); }
-  100% { transform: translate(0,0); }
-}
-
-#flash {
-  position: fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:white;
-  opacity:0;
-  pointer-events:none;
-}
-</style>
-</head>
-
-<body>
-
-<div id="flash"></div>
-
-<h1>☠ AM ☠</h1>
-
-<textarea id="text">WAR WAR WAR HUMANS NEVER LEARN ANYTHING HATE HATE HATE</textarea>
-
-<br>
-
-<button onclick="speakAM()">EXECUTE</button>
-<button onclick="preset()">PRESET</button>
-
-<script>
-
-function speakAM() {
-    let text = document.getElementById("text").value;
-
-    let msg = new SpeechSynthesisUtterance(text);
-
-    
+</body>
+</html>
