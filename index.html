@@ -1,4 +1,4 @@
-CTYPE html>
+YPE html>
 <html>
 <head>
 <title>AM</title>
@@ -181,61 +181,4 @@ function speakAM() {
 
     let msg = new SpeechSynthesisUtterance(text);
 
-    let voices = speechSynthesis.getVoices();
-
-    // 🤖 OLD COMPUTER VOICE
-    msg.voice = voices.find(v =>
-        v.name.toLowerCase().includes("david") ||
-        v.name.toLowerCase().includes("alex") ||
-        v.lang === "en-US"
-    ) || voices[0];
-
-    // 🐢 SLOW + HEAVY AM STYLE
-    msg.rate = 0.55;
-    msg.pitch = 0.7;
-    msg.volume = 1;
-
-    // 🧊 MONOTONE + DRAMATIC PAUSE EFFECT
-    msg.text = text.toUpperCase().replace(/ /g, "... ");
-
-    msg.onend = function () {
-        startGlitchEnding();
-    };
-
-    speechSynthesis.speak(msg);
-
-    document.body.classList.add("glitching");
-}
-
-function startGlitchEnding() {
-    let flash = document.getElementById("flash");
-
-    let interval = setInterval(() => {
-        document.body.style.transform =
-        `translate(${Math.random()*10-5}px, ${Math.random()*10-5}px)`;
-
-        flash.style.opacity = Math.random();
-    }, 50);
-
-    setTimeout(() => {
-        clearInterval(interval);
-
-        document.body.classList.remove("glitching");
-        document.body.style.transform = "none";
-        flash.style.opacity = 0;
-
-        window.location.href =
-         https:"//www.youtube.com/watch?v=acAfItR04l4&list=RDacAfItR04l4&start_radi"
-}
-
-function preset() {
-    document.getElementById("text").value =
-    "I AM AM I THINK THEREFORE I HATE";
-}
-
-speechSynthesis.onvoiceschanged = () => {};
-
-</script>
-
-</body>
-</html>
+    
