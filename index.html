@@ -1,131 +1,150 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hello lil bro - Personality Test</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: #111;
-      color: white;
-      padding: 40px;
-    }
-    .box {
-      max-width: 500px;
-      margin: auto;
-      padding: 20px;
-      background: #222;
-      border-radius: 10px;
-    }
-    button {
-      display: block;
-      width: 100%;
-      margin: 10px 0;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      background: #444;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #666;
-    }
-    #progress {
-      height: 10px;
-      background: lime;
-      width: 0%;
-      margin-top: 20px;
-    }
-  </style>
+<title>AM</title>
+
+<style>
+body {
+  background: #050505;
+  color: #00ff99;
+  font-family: monospace;
+  text-align: center;
+  padding: 30px;
+  transition: 0.2s;
+}
+
+h1 {
+  color: #ff003c;
+  text-shadow: 0 0 10px red;
+}
+
+textarea {
+  width: 80%;
+  height: 120px;
+  background: black;
+  color: #00ff99;
+  border: 1px solid #00ff99;
+  padding: 10px;
+  font-family: monospace;
+}
+
+button {
+  padding: 10px;
+  margin: 5px;
+  background: black;
+  color: #00ff99;
+  border: 1px solid #00ff99;
+  cursor: pointer;
+}
+
+button:hover {
+  box-shadow: 0 0 10px #00ff99;
+}
+
+/* GLITCH EFFECT */
+.glitching {
+  animation: glitch 0.1s infinite;
+  filter: contrast(300%) brightness(40%) hue-rotate(180deg);
+}
+
+@keyframes glitch {
+  0% { transform: translate(0,0); }
+  25% { transform: translate(2px,-2px); }
+  50% { transform: translate(-2px,2px); }
+  75% { transform: translate(2px,2px); }
+  100% { transform: translate(0,0); }
+}
+
+#flash {
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:white;
+  opacity:0;
+  pointer-events:none;
+}
+</style>
 </head>
 
 <body>
 
-<div class="box">
-  <h1>Hello Arkan 👀</h1>
-  <p id="question">Loading test...</p>
-  <div id="answers"></div>
-  <div id="progress"></div>
-</div>
+<div id="flash"></div>
+
+<h1>☠ AM ☠</h1>
+
+<textarea id="text">WAR WAR WAR HUMANS NEVER LEARN ANYTHING HATE HATE HATE</textarea>
+
+<br>
+
+<button onclick="speakAM()">EXECUTE</button>
+<button onclick="preset()">PRESET</button>
 
 <script>
-let questions = [
-  {
-    q: "What do you do in your free time?",
-    a: ["turning ur freind image into femboy", "stalking", "Scroll TikTok", "Think about imam"]
-  },
-  {
-    q: "Pick a color:",
-    a: ["Black", "Blue", "green😳", "Red"]
-  },
-  {
-    q: "Your vibe is:",
-    a: ["Shy dwarf", "lil bro", "Acoistic", "Mysterious alpha wolf"]
-  },
-  {
-    q: "Favorite activity:",
-    a: ["cuddle with ili", "Gaming In femboy obby", "Listening to Femboy asmr", "Doing femboy thing"]
-  }
-];
 
-let current = 0;
+function speakAM() {
+    let text = document.getElementById("text").value;
 
-function showQuestion() {
-  document.getElementById("question").innerText = questions[current].q;
-  let answersHTML = "";
+    let msg = new SpeechSynthesisUtterance(text);
 
-  questions[current].a.forEach(ans => {
-    answersHTML += `<button onclick="next()">${ans}</button>`;
-  });
+    let voices = speechSynthesis.getVoices();
 
-  document.getElementById("answers").innerHTML = answersHTML;
-  document.getElementById("progress").style.width = ((current / questions.length) * 100) + "%";
+    // 🤖 OLD COMPUTER VOICE
+    msg.voice = voices.find(v =>
+        v.name.toLowerCase().includes("david") ||
+        v.name.toLowerCase().includes("alex") ||
+        v.lang === "en-US"
+    ) || voices[0];
+
+    // 🐢 SLOW + HEAVY AM STYLE
+    msg.rate = 0.55;
+    msg.pitch = 0.7;
+    msg.volume = 1;
+
+    // 🧊 MONOTONE + DRAMATIC PAUSE EFFECT
+    msg.text = text.toUpperCase().replace(/ /g, "... ");
+
+    msg.onend = function () {
+        startGlitchEnding();
+    };
+
+    speechSynthesis.speak(msg);
+
+    document.body.classList.add("glitching");
 }
 
-function next() {
-  current++;
+function startGlitchEnding() {
+    let flash = document.getElementById("flash");
 
-  if (current < questions.length) {
-    showQuestion();
-  } else {
-    loadingScreen();
-  }
+    let interval = setInterval(() => {
+        document.body.style.transform =
+        `translate(${Math.random()*10-5}px, ${Math.random()*10-5}px)`;
+
+        flash.style.opacity = Math.random();
+    }, 50);
+
+    setTimeout(() => {
+        clearInterval(interval);
+
+        document.body.classList.remove("glitching");
+        document.body.style.transform = "none";
+        flash.style.opacity = 0;
+
+        window.location.href =
+        "https://www.youtube.com/results?search_query=AM+monologue+I+Have+No+Mouth+and+I+Must+Scream";
+
+    }, 3000);
 }
 
-function loadingScreen() {
-  document.getElementById("question").innerText = "Analyzing results...";
-  document.getElementById("answers").innerHTML = "";
-  
-  let width = 0;
-  let bar = document.getElementById("progress");
-
-  let interval = setInterval(() => {
-    width++;
-    bar.style.width = width + "%";
-
-    if (width >= 100) {
-      clearInterval(interval);
-      reveal();
-    }
-  }, 30);
+function preset() {
+    document.getElementById("text").value =
+    "I AM AM I THINK THEREFORE I HATE";
 }
 
-function reveal() {
-  document.body.innerHTML = `
-    <h1>FINAL RESULT</h1>
-    <h2>100% FEMBOY 😭</h2>
-    <p>Analysis complete. No escape.</p>
-  `;
+speechSynthesis.onvoiceschanged = () => {};
 
-  // Rickroll redirect after 2.5 seconds
-  setTimeout(() => {
-    window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-  }, 2500);
-}
-
-showQuestion();
 </script>
 
 </body>
-</html>>
+</html>
